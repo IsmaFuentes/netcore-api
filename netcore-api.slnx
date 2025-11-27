@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Elementos de la solución/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="netcore-api.Contracts/netcore-api.Contracts.csproj" Id="3f1cfd3f-64a0-4a9a-83de-06e9220fc962" />
+  <Project Path="netcore-api.Data/netcore-api.Data.csproj" Id="abe9c0c0-9e75-4292-b9ef-e9752c90c11f" />
+  <Project Path="netcore-api/netcore-api.csproj" />
+</Solution>
