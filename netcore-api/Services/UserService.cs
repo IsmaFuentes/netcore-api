@@ -59,7 +59,7 @@ namespace netcore_api.Services
 
     public async Task<Contracts.DTO.UserDto?> GetUserAsync(int id)
     {
-      var user = await _context.Users.FirstOrDefaultAsync(e => e.Id == id);
+      var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
 
       if(user is not null)
       {
