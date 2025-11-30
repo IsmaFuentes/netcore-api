@@ -6,8 +6,8 @@ namespace netcore_api.Controllers
   [ApiController, Route("api/[controller]"), Authorize]
   public class UserController : ControllerBase
   {
-    private Services.IUserService _userService;
-    public UserController(Services.IUserService userService) 
+    private Services.Interfaces.IUserService _userService;
+    public UserController(Services.Interfaces.IUserService userService) 
     { 
       _userService = userService;
     }
@@ -15,13 +15,9 @@ namespace netcore_api.Controllers
     [HttpGet, Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
     {
-      var users = await _userService.GetUsersAsync(e => e.IsActive && ! e.IsDeleted, page, pageSize);
+      var result = await _userService.GetUsersAsync(e => e.IsActive && ! e.IsDeleted, page, pageSize);
 
-      return Ok(new Contracts.DTO.PaginationResultDto
-      {
-        Page = page,
-        Results = users
-      });
+      return Ok(result);
     }
 
     [HttpGet("{id}"), Authorize(Roles = "Admin,Moderator,User")]

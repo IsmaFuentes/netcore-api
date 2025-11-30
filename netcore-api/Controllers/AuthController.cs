@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using netcore_api.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace netcore_api.Controllers
 {
   [ApiController, Route("api/[controller]")]
   public class AuthController : ControllerBase
   {
-    private readonly IAuthService _authService;
+    private readonly Services.Interfaces.IAuthService _authService;
 
-    public AuthController(IAuthService authService)
+    public AuthController(Services.Interfaces.IAuthService authService)
     {
       _authService = authService;
     }

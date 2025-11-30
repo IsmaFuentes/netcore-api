@@ -5,12 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace netcore_api.Services
 {
-  public interface IAuthService
-  {
-    public Task<Contracts.DTO.AuthResponseDto?> Login(Contracts.DTO.AuthRequestDto authRequest);
-  }
-
-  public class AuthService : IAuthService
+  public class AuthService : Interfaces.IAuthService
   {
     private readonly Data.Context _ctx;
     private readonly IConfiguration _configuration;

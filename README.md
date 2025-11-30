@@ -1,6 +1,7 @@
 ﻿# Web API .NET 10 / JWT / EF
 
-Este es un proyecto de ejemplo basado en **ASP.NET Core Web API** con autenticación **JWT** y **Entity Framework (EF)**. Esta plantilla proporciona una estructura básica para construir APIs RESTful con soporte para autenticación y autorización.
+**ASP.NET Core Web API** con autenticación **JWT** y **Entity Framework (EF)**. 
+Esta plantilla proporciona una estructura básica para construir APIs RESTful con soporte para autenticación y autorización.
 
 ## Estructura del Proyecto
 
@@ -55,13 +56,13 @@ Data
 
 ## Manejo de errores
 
-La API utiliza un middleware de manejo de errores para capturar y devolver errores en un formato uniforme. Si se lanza una excepción como NotFoundException, UserAlreadyExistsException, o cualquier otro tipo de error, el middleware devolverá un mensaje adecuado con el código de estado correspondiente (por ejemplo, 404 Not Found o 400 Bad Request).
+La API utiliza un middleware de manejo de errores para capturar y devolver errores. 
+Si se lanza una excepción, no controlada o manejada, el middleware devolverá un mensaje adecuado con el código de estado correspondiente (por ejemplo, 404 Not Found o 400 Bad Request).
 
 ## Requisitos
 
 - **.NET 6.0 o superior**
-- **SQL Server** (o cualquier otro proveedor de base de datos compatible con Entity Framework)
-- **Postman o cualquier herramienta para probar APIs**
+- **Microsoft SQL Server**
 
 ## Instalación
 

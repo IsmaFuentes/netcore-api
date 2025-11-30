@@ -4,16 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace netcore_api.Services
 {
-  public interface IUserService
-  {
-    public Task<List<Contracts.DTO.UserDto>> GetUsersAsync(Expression<Func<Data.Entities.User, bool>>? expression = null, int page = 1, int pageSize = 100);
-    public Task<Contracts.DTO.UserDto?> GetUserAsync(int id);
-    public Task<Contracts.DTO.UserDto> CreateUserAsync(Contracts.DTO.UserRegistrationDto dto);
-    public Task<Contracts.DTO.UserDto> UpdateUserAsync(Contracts.DTO.UserDto dto);
-    public Task<Contracts.DTO.UserDto> DeleteUserAsync(int id);
-  }
-
-  public class UserService : IUserService
+  public class UserService : Interfaces.IUserService
   {
     private readonly Data.Context _context;
     private readonly PasswordHasher<Data.Entities.User> _hasher;
@@ -29,12 +20,13 @@ namespace netcore_api.Services
       _logger = logger;
     }  
 
-    public async Task<List<Contracts.DTO.UserDto>> GetUsersAsync(
+    public async Task<Contracts.DTO.PaginationResultDto> GetUsersAsync(
       Expression<Func<Data.Entities.User, bool>>? expression = null, 
       int page = 1, 
       int pageSize = 100)
     {
       var query = _context.Users.AsNoTracking();
+      int count = await query.CountAsync();
 
       if(expression is not null)
       {
@@ -54,7 +46,12 @@ namespace netcore_api.Services
         })
         .ToListAsync();
 
-      return result;
+      return new Contracts.DTO.PaginationResultDto() 
+      {
+        Page = page,
+        Count = count,
+        Results = result
+      };
     }
 
     public async Task<Contracts.DTO.UserDto?> GetUserAsync(int id)

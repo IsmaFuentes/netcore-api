@@ -46,8 +46,8 @@ namespace netcore_api
         options.UseSqlServer(connString, o => o.UseCompatibilityLevel(Data.Context.GetSqlCompatLevel(connString))));
 
       builder.Services.AddScoped<Microsoft.AspNetCore.Identity.PasswordHasher<Data.Entities.User>>();
-      builder.Services.AddScoped<Services.IAuthService, Services.AuthService>();
-      builder.Services.AddScoped<Services.IUserService, Services.UserService>();
+      builder.Services.AddScoped<Services.Interfaces.IAuthService, Services.AuthService>();
+      builder.Services.AddScoped<Services.Interfaces.IUserService, Services.UserService>();
 
       // Esquema de autenticación Jwt
       builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
