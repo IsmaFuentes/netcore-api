@@ -1,18 +1,18 @@
-﻿using System.Linq.Expressions;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using netcore_api.Mapping;
 
 namespace netcore_api.Services
 {
   public class UserService : Interfaces.IUserService
   {
     private readonly Data.Context _context;
-    private readonly PasswordHasher<Data.Entities.User> _hasher;
+    private readonly IPasswordHasher<Data.Entities.User> _hasher;
     private readonly ILogger<UserService> _logger;
 
     public UserService(
       Data.Context context, 
-      PasswordHasher<Data.Entities.User> hasher, 
+      IPasswordHasher<Data.Entities.User> hasher, 
       ILogger<UserService> logger) 
     {
       _context = context;
@@ -21,12 +21,12 @@ namespace netcore_api.Services
     }  
 
     public async Task<Contracts.DTO.PaginationResultDto> GetUsersAsync(
-      Expression<Func<Data.Entities.User, bool>>? expression = null, 
+      System.Linq.Expressions.Expression<Func<Data.Entities.User, bool>>? expression = null, 
       int page = 1, 
       int pageSize = 100)
     {
       var query = _context.Users.AsNoTracking();
-      int count = await query.CountAsync();
+      int count = await query.Where(e => e.IsActive && !e.IsDeleted).CountAsync();
 
       if(expression is not null)
       {
@@ -36,14 +36,7 @@ namespace netcore_api.Services
       query = query.OrderBy(e => e.Id).Skip((page - 1) * pageSize).Take(pageSize);
 
       var result = await query
-        .Select(e => new Contracts.DTO.UserDto()
-        {
-          Id = e.Id,
-          UserName = e.UserName,
-          RegistrationDate = e.RegistrationDate,
-          IsActive = e.IsActive,
-          Role = (int)e.Role
-        })
+        .Select(e => e.MapToUserDto())
         .ToListAsync();
 
       return new Contracts.DTO.PaginationResultDto() 
@@ -60,14 +53,7 @@ namespace netcore_api.Services
 
       if(user is not null)
       {
-        return new Contracts.DTO.UserDto()
-        {
-          Id = user.Id,
-          UserName = user.UserName,
-          RegistrationDate = user.RegistrationDate,
-          IsActive = user.IsActive,
-          Role = (int)user.Role
-        };
+        return user.MapToUserDto();
       }
 
       _logger.LogWarning($"User with id {id} not found");
@@ -78,7 +64,7 @@ namespace netcore_api.Services
     public async Task<Contracts.DTO.UserDto> CreateUserAsync(Contracts.DTO.UserRegistrationDto dto)
     {
       if (await _context.Users.AnyAsync(e => e.UserName == dto.UserName))
-        throw new Exceptions.UserAlreadyExistsException("your username is already in use.");
+        throw new Exceptions.UserAlreadyExistsException("Username is already in use.");
 
       var user = new Data.Entities.User();
 
@@ -90,14 +76,7 @@ namespace netcore_api.Services
       await _context.Users.AddAsync(user);
       await _context.SaveChangesAsync();
 
-      return new Contracts.DTO.UserDto()
-      {
-        Id = user.Id,
-        UserName = user.UserName,
-        RegistrationDate = user.RegistrationDate,
-        IsActive = user.IsActive,
-        Role = (int)user.Role
-      };
+      return user.MapToUserDto();
     }
 
     public async Task<Contracts.DTO.UserDto> UpdateUserAsync(Contracts.DTO.UserDto dto)
@@ -115,14 +94,7 @@ namespace netcore_api.Services
 
       await _context.SaveChangesAsync();
 
-      return new Contracts.DTO.UserDto()
-      {
-        Id = user.Id,
-        UserName = user.UserName,
-        RegistrationDate = user.RegistrationDate,
-        IsActive = user.IsActive,
-        Role = (int)user.Role
-      };
+      return user.MapToUserDto();
     }
 
     public async Task<Contracts.DTO.UserDto> DeleteUserAsync(int id)
@@ -140,16 +112,7 @@ namespace netcore_api.Services
 
       await _context.SaveChangesAsync();
 
-      return new Contracts.DTO.UserDto()
-      {
-        Id = user.Id,
-        UserName = user.UserName,
-        RegistrationDate = user.RegistrationDate,
-        IsActive = user.IsActive,
-        Role = (int)user.Role,
-        IsDeleted = user.IsDeleted,
-        DeletedAt = user.DeletedAt,
-      };
+      return user.MapToUserDto();
     }
   }
 }

@@ -2,6 +2,7 @@
 
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -38,14 +39,18 @@ namespace netcore_api
     private static void ConfigureServices(WebApplicationBuilder builder)
     {
       builder.Services.AddLogging();
-      builder.Services.AddControllers();
+      builder.Services.AddControllers(options =>
+      {
+        options.Filters.Add<Controllers.Filters.ValidationFilter>();
+      });
 
       string? connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
       builder.Services.AddDbContext<Data.Context>(options => 
         options.UseSqlServer(connString, o => o.UseCompatibilityLevel(Data.Context.GetSqlCompatLevel(connString))));
 
-      builder.Services.AddScoped<Microsoft.AspNetCore.Identity.PasswordHasher<Data.Entities.User>>();
+      builder.Services.AddScoped<IPasswordHasher<Data.Entities.User>, PasswordHasher<Data.Entities.User>>();
+      builder.Services.AddScoped<Services.Interfaces.IJwtTokenService, Services.JwtTokenService>();
       builder.Services.AddScoped<Services.Interfaces.IAuthService, Services.AuthService>();
       builder.Services.AddScoped<Services.Interfaces.IUserService, Services.UserService>();
 

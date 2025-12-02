@@ -16,15 +16,11 @@ namespace netcore_api.Controllers
     [HttpPost("login"), AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] Contracts.DTO.AuthRequestDto auth)
     {
-      if (!string.IsNullOrEmpty(auth.UserName) && 
-          !string.IsNullOrEmpty(auth.Password)) 
-      {
-        var authResult = await _authService.Login(auth);
+      var authResult = await _authService.Login(auth);
 
-        if(authResult is not null)
-        {
-          return Ok(authResult);
-        }
+      if (authResult is not null)
+      {
+        return Ok(authResult);
       }
 
       return Unauthorized();

@@ -9,21 +9,28 @@ Esta plantilla proporciona una estructura básica para construir APIs RESTful co
 ```
 API
 └───Controllers
+│		└─── Filters
+│		│		│....
 │   │   AuthController
 │   │   UserController
 |   |   HomeController
 │   
 └───Exceptions
 |   |   ....
-|
+│  
 └───Middleware
 │   │   ErrorHandlingMiddleware
-|
+│
+└─── Mapping
+│		│ UserMappingExtensions
+│
 └───Services
+│		└─── Interfaces
+│		|   | ....
 │   │   AuthService
 │   │   UserService
 |
-| Program
+│   Program
 
 Contracts
 └───DTO
@@ -33,7 +40,7 @@ Data
 └───Entities
 │   │   User
 |
-| Context
+│ Context
 ```
 
 ## Características
@@ -42,6 +49,8 @@ Data
 - **CRUD de Usuarios**: Los usuarios pueden ser creados, actualizados, eliminados y listados.
 - **Autorización basada en Roles**: Los roles de usuario como `Admin`, `User`, `Moderator` controlan el acceso a los diferentes endpoints.
 - **Manejo de errores**: Middleware que captura y devuelve errores de manera uniforme.
+- **Validaciones**: Utiliza filtros para los controladores que validan los campos requeridos (ModelState)
+- **Mapping a DTO**: El intercambio de datos se realiza estrictamente vía DTOs
 
 ## Endpoints
 
