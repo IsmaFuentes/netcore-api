@@ -3,8 +3,17 @@
 **ASP.NET Core Web API** con autenticación **JWT** y **Entity Framework (EF)**. 
 Esta plantilla proporciona una estructura básica para construir APIs RESTful con soporte para autenticación y autorización.
 
-## Estructura del Proyecto
+## Características
 
+- **Autenticación JWT**: Los usuarios pueden iniciar sesión para obtener un **JWT** que se usará para autenticación en todos los endpoints protegidos.
+- **CRUD de Usuarios**: Los usuarios pueden ser creados, actualizados, eliminados y listados.
+- **Autorización basada en Roles**: Los roles de usuario como `Admin`, `User`, `Moderator` controlan el acceso a los diferentes endpoints.
+- **Manejo de errores**: Middleware que captura y devuelve errores de manera uniforme.
+- **Validaciones**: Utiliza filtros para los controladores que validan los campos requeridos (ModelState)
+- **Mapping a DTO**: El intercambio de datos se realiza estrictamente vía DTOs
+
+
+## Estructura del Proyecto
 
 ```
 API
@@ -43,15 +52,6 @@ Data
 │ Context
 ```
 
-## Características
-
-- **Autenticación JWT**: Los usuarios pueden iniciar sesión para obtener un **JWT** que se usará para autenticación en todos los endpoints protegidos.
-- **CRUD de Usuarios**: Los usuarios pueden ser creados, actualizados, eliminados y listados.
-- **Autorización basada en Roles**: Los roles de usuario como `Admin`, `User`, `Moderator` controlan el acceso a los diferentes endpoints.
-- **Manejo de errores**: Middleware que captura y devuelve errores de manera uniforme.
-- **Validaciones**: Utiliza filtros para los controladores que validan los campos requeridos (ModelState)
-- **Mapping a DTO**: El intercambio de datos se realiza estrictamente vía DTOs
-
 ## Endpoints
 
 | URL            | HTTP   | Param                              | Result                                                   | Role                 |
@@ -72,33 +72,3 @@ Si se lanza una excepción, no controlada o manejada, el middleware devolverá u
 
 - **.NET 6.0 o superior**
 - **Microsoft SQL Server**
-
-## Instalación
-
-### 1. Clonar el Repositorio
-
-```bash
-git clone https://github.com/tu_usuario/tu_repositorio.git
-```
-
-### 2. Configurar la base de datos
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=NombreBaseDeDatos;User Id=usuario;Password=contraseña;"
-  }
-}
-```
-
-### 3. Restaurar dependencias
-
-```bash
-dotnet restore
-```
-
-### 4. Ejecutar el proyecto
-
-```bash
-dotnet run
-```
