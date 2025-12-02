@@ -4,5 +4,8 @@
   </Folder>
   <Project Path="netcore-api.Contracts/netcore-api.Contracts.csproj" Id="3f1cfd3f-64a0-4a9a-83de-06e9220fc962" />
   <Project Path="netcore-api.Data/netcore-api.Data.csproj" Id="abe9c0c0-9e75-4292-b9ef-e9752c90c11f" />
+  <Project Path="netcore-api.Test/netcore-api.Test.csproj" Id="b25a79fb-ff12-4b20-8f30-ae5a3ac2c72b">
+    <Build Solution="Release|*" Project="false" />
+  </Project>
   <Project Path="netcore-api/netcore-api.csproj" />
 </Solution>
