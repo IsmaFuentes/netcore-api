@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace netcore_api.Controllers
 {
-  [ApiController, Route("api/[controller]")]
+  [ApiController, Route("api/[controller]"), Authorize]
   public class AuthController : ControllerBase
   {
     private readonly Services.Interfaces.IAuthService _authService;
@@ -20,6 +20,19 @@ namespace netcore_api.Controllers
 
       if (authResult is not null)
       {
+        return Ok(authResult);
+      }
+
+      return Unauthorized();
+    }
+
+    [HttpGet("refreshToken")]
+    public async Task<IActionResult> RefreshToken()
+    {
+      if(int.TryParse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value, out int userId))
+      {
+        var authResult = await _authService.RefreshToken(userId);
+
         return Ok(authResult);
       }
 
