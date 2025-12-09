@@ -1,54 +1,78 @@
-﻿# Web API .NET 10 / JWT / EF
+﻿# ASP.NET CORE Web API 
 
-**ASP.NET Core API** Entity Framework + JWT authentication
-This template provides the basic structure to build RESTful APIs with support for authentication and authorization.
+![.NET](https://img.shields.io/badge/.NET-10-blue)
+Modern REST API built with **ASP.NET Core 10**, **Entity Framework Core**, and **JWT authentication**.  
+Designed as a clean and reusable **template** for small/medium projects or for learning modern ASP.NET Core patterns.
 
-## Key aspects
+## Requirements
 
-- **JWT Authentication**: Users must be logged in to be able to access protected endpoints
-- **User CRUD**: Basic operations for users, (Get/Create/Update/Delete)
-- **Role based authorization**: Roles such as `Admin`, `User` or `Moderator` control the access to different endpoints.
-- **Centralized error handling**: Exceptions are handled by a middleware that returns a standardized error response using the "ProblemDetails" structure.
-- **Model State validations**: Implements the use of filters that validate required fields
-- **DTO Mapping**: The information exchange is done exclusively with DTOs
-- **Ensures SQL Server compatibility**: Breaking changes in EF are handled gracefully using the compat level required by the SQL engine in use
+- NET 10
+- Microsoft SQL Server
 
-## Project structure (Layered design)
+## Getting Started
+
+-  Clone the repository  
+   `git clone https://github.com/....`
+
+- Configure **appsettings.json**  
+   Add your SQL Server connection string and JWT options:
+   ```json
+   {
+     "ConnectionStrings": { "DefaultConnection": "YOUR-CONNECTION" },
+     "Jwt": {
+       "Issuer": "...",
+       "Audience": "...",
+       "SecretKey": "..."
+     }
+   }
+   ```
+
+- Run the project using **dotnet run** or with Visual Studio
+
+## Features
+
+- **JWT Authentication**  
+  Secure login with token-based authentication.
+
+- **User CRUD**  
+  Create, update, delete, and list users.
+
+- **Role-based Authorization**  
+  Built-in roles: `Admin`, `Moderator`, `User`.
+
+- **Centralized Error Handling**  
+  Custom middleware returns standardized responses using **ProblemDetails**.
+
+- **DTO-Only Communication**  
+  No direct exposure of EF entities.
+
+- **Automatic Model Validation**  
+  Global validation filter for missing/invalid fields.
+
+- **SQL Server Compatibility Level**  
+  Prevents breaking changes between SQL server versions.
+
+- **Auto Database Initialization (development mode)**  
+  When running in `Development`, the API:
+  - Creates the database automatically  
+  - Seeds default users: **Admin**, **Moderator**, **User**
+
+## Project structure
 
 ```
 API
-└───Controllers
-│		└─── Filters
-│		│		│....
-│   │   AuthController
-│   │   UserController
-|   |   HomeController
-│   
-└───Exceptions
-|   |   ....
-│  
-└───Middleware
-│   │   ErrorHandlingMiddleware
-│
+└─── Controllers
+│    └─── Filters
+└─── Exceptions
+└─── Middleware
 └─── Mapping
-│		│ UserMappingExtensions
-│
-└───Services
-│		└─── Interfaces
-│		|   | ....
-│   │   AuthService
-│   │   UserService
-|
-│   Program
-
+└─── Services
+│    └─── Interfaces
 Contracts
-└───DTO
-    | ....
-
-Data
-└───Entities
-│   │   User
+└─── DTO
 |
+Data
+└─── Entities
 │ Context
 ```
 
@@ -62,8 +86,3 @@ Data
 | api/user       | POST   | [FromBody] DTO.UserRegistrationDto | IActionResult<DTO.UserDTO>                               | Admin                |
 | api/user       | PUT    | [FromBody] DTO.UserDto             | IActionResult<DTO.UserDTO>                               | Admin                |
 | api/user/:id   | DELETE | id                                 | NoContent                                                | Admin                |
-
-## Requirements
-
-- .NET 10
-- Microsoft SQL Server
