@@ -45,7 +45,7 @@ namespace netcore_api.Services
         throw new Exceptions.NotFoundException("user not found");
 
       if (!user.IsActive)
-        throw new Exceptions.UnauthorizedException("the user is inactive");
+        throw new Exceptions.UnauthorizedException("this user has been unauthorized");
 
       return new Contracts.DTO.AuthResponseDto 
       { 

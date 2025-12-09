@@ -21,7 +21,7 @@ namespace netcore_api.Services
       {
         Issuer = _configuration["Jwt:Issuer"],
         Audience = _configuration["Jwt:Audience"],
-        Expires = DateTime.UtcNow.AddDays(1), // Añadir en json de configuración
+        Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpirationMinutes"])),
         SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
         Subject = new ClaimsIdentity(
         [
