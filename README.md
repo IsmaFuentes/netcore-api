@@ -1,19 +1,19 @@
 ﻿# Web API .NET 10 / JWT / EF
 
-**ASP.NET Core Web API** con autenticación **JWT** y **Entity Framework (EF)**. 
-Esta plantilla proporciona una estructura básica para construir APIs RESTful con soporte para autenticación y autorización.
+**ASP.NET Core API** Entity Framework + JWT authentication
+This template provides the basic structure to build RESTful APIs with support for authentication and authorization.
 
-## Características
+## Key aspects
 
-- **Autenticación JWT**: Los usuarios pueden iniciar sesión para obtener un **JWT** que se usará para autenticación en todos los endpoints protegidos.
-- **CRUD de Usuarios**: Los usuarios pueden ser creados, actualizados, eliminados y listados.
-- **Autorización basada en Roles**: Los roles de usuario como `Admin`, `User`, `Moderator` controlan el acceso a los diferentes endpoints.
-- **Manejo de errores**: Middleware que captura y devuelve errores de manera uniforme.
-- **Validaciones**: Utiliza filtros para los controladores que validan los campos requeridos (ModelState)
-- **Mapping a DTO**: El intercambio de datos se realiza estrictamente vía DTOs
+- **JWT Authentication**: Users must be logged in to be able to access protected endpoints
+- **User CRUD**: Basic operations for users, (Get/Create/Update/Delete)
+- **Role based authorization**: Roles such as `Admin`, `User` or `Moderator` control the access to different endpoints.
+- **Centralized error handling**: Exceptions are handled by a middleware that returns a standardized error response using the "ProblemDetails" structure.
+- **Model State validations**: Implements the use of filters that validate required fields
+- **DTO Mapping**: The information exchange is done exclusively with DTOs
+- **Ensures SQL Server compatibility**: Breaking changes in EF are handled gracefully using the compat level required by the SQL engine in use
 
-
-## Estructura del Proyecto
+## Project structure (Layered design)
 
 ```
 API
@@ -56,19 +56,14 @@ Data
 
 | URL            | HTTP   | Param                              | Result                                                   | Role                 |
 |----------------|--------|------------------------------------|----------------------------------------------------------|----------------------|
-| api/auth/login | POST   | [FromBody] DTO.AuthRequestDto      | IActionResult<DTO.AuthResponseDto> (JWT) \| Unauthorized | All                  |
+| api/auth/login | POST   | [FromBody] DTO.AuthRequestDto      | IActionResult<DTO.AuthResponseDto> (JWT) \| Unauthorized | Anonymous						 |
 | api/user       | GET    | [FromQuery] page \| pageSize       | IActionResult<DTO.PaginationResultDto>                   | User,Moderator,Admin |
-| api/user/id    | GET    | id                                 | IActionResult<DTO.UserDTO> \| NotFound                   | Admin                |
+| api/user/:id   | GET    | id                                 | IActionResult<DTO.UserDTO> \| NotFound                   | Admin                |
 | api/user       | POST   | [FromBody] DTO.UserRegistrationDto | IActionResult<DTO.UserDTO>                               | Admin                |
 | api/user       | PUT    | [FromBody] DTO.UserDto             | IActionResult<DTO.UserDTO>                               | Admin                |
-| api/user/id    | DELETE | id                                 | NoContent                                                | Admin                |
+| api/user/:id   | DELETE | id                                 | NoContent                                                | Admin                |
 
-## Manejo de errores
+## Requirements
 
-La API utiliza un middleware de manejo de errores para capturar y devolver errores. 
-Si se lanza una excepción, no controlada o manejada, el middleware devolverá un mensaje adecuado con el código de estado correspondiente (por ejemplo, 404 Not Found o 400 Bad Request).
-
-## Requisitos
-
-- **.NET 6.0 o superior**
-- **Microsoft SQL Server**
+- .NET 10
+- Microsoft SQL Server

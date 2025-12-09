@@ -1,5 +1,3 @@
-
-
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -76,16 +74,12 @@ namespace netcore_api
           OnChallenge = async context =>
           {
             context.HandleResponse();
-            context.Response.StatusCode = 401;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(new { status = 401, message = "Invalid Token" }), System.Text.Encoding.UTF8);
+            throw new Exceptions.InvalidTokenException("Invalid token");
           }, 
           
           OnForbidden = async context =>
           {
-            context.Response.StatusCode = 403;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(new { status = 403, message = "You do not have access to this resource" }), System.Text.Encoding.UTF8);
+            throw new Exceptions.UnauthorizedException("You do not have access to this resource");
           }
         };
       });

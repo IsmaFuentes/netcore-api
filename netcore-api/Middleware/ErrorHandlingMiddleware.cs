@@ -34,7 +34,9 @@ namespace netcore_api.Middleware
         {
           NotFoundException          => StatusCodes.Status404NotFound,
           UserAlreadyExistsException => StatusCodes.Status409Conflict,
-          ArgumentException          => StatusCodes.Status400BadRequest, 
+          ArgumentException          => StatusCodes.Status400BadRequest,
+          InvalidTokenException      => StatusCodes.Status401Unauthorized,
+          UnauthorizedException      => StatusCodes.Status403Forbidden,
           _                          => StatusCodes.Status500InternalServerError
         };
 
@@ -60,9 +62,14 @@ namespace netcore_api.Middleware
       return statusCode switch
       {
         400 => "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+        401 => "https://tools.ietf.org/html/rfc9110#section-15.5.2",
+        403 => "https://tools.ietf.org/html/rfc9110#section-15.5.4",
         404 => "https://tools.ietf.org/html/rfc9110#section-15.5.5",
         409 => "https://tools.ietf.org/html/rfc9110#section-15.5.10",
         500 => "https://tools.ietf.org/html/rfc9110#section-15.6.1",
+        502 => "https://tools.ietf.org/html/rfc9110#section-15.6.3",
+        503 => "https://tools.ietf.org/html/rfc9110#section-15.6.4",
+        504 => "https://tools.ietf.org/html/rfc9110#section-15.6.5",
         _ => $"about:blank"
       };
     }
