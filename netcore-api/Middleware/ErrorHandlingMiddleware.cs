@@ -44,7 +44,7 @@ namespace netcore_api.Middleware
         {
           Status = statusCode,
           Title = ex.GetType().Name,
-          Type = GetStatusCodeErrorType(statusCode),
+          Type = GetStatusCodeRfcType(statusCode),
           Detail = statusCode == 500 ? "An unexpected error occurred." : ex.Message,
         };
         
@@ -57,7 +57,7 @@ namespace netcore_api.Middleware
       }
     }
 
-    private string GetStatusCodeErrorType(int statusCode)
+    private string GetStatusCodeRfcType(int statusCode)
     {
       return statusCode switch
       {
