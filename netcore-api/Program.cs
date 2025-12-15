@@ -44,9 +44,13 @@ namespace netcore_api
 
       string? connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+      // DB context
       builder.Services.AddDbContext<Data.Context>(options => 
         options.UseSqlServer(connString, o => o.UseCompatibilityLevel(Data.Context.GetSqlCompatLevel(connString))));
 
+      // Repositories
+
+      // Services
       builder.Services.AddScoped<IPasswordHasher<Data.Entities.User>, PasswordHasher<Data.Entities.User>>();
       builder.Services.AddScoped<Services.Interfaces.IJwtTokenService, Services.JwtTokenService>();
       builder.Services.AddScoped<Services.Interfaces.IAuthService, Services.AuthService>();

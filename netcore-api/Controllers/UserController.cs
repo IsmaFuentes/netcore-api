@@ -15,7 +15,7 @@ namespace netcore_api.Controllers
     [HttpGet, Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
     {
-      var result = await _userService.GetUsersAsync(e => e.IsActive && ! e.IsDeleted, page, pageSize);
+      var result = await _userService.GetUsersAsync(page: page, pageSize: pageSize);
 
       return Ok(result);
     }

@@ -25,7 +25,7 @@ namespace netcore_api.Services
       int page = 1, 
       int pageSize = 100)
     {
-      var query = _context.Users.AsNoTracking();
+      var query = _context.Users.AsNoTracking().Where(e => e.IsActive && !e.IsDeleted);
       int count = await query.Where(e => e.IsActive && !e.IsDeleted).CountAsync();
 
       if(expression is not null)
@@ -107,6 +107,7 @@ namespace netcore_api.Services
         throw new Exceptions.NotFoundException("user not found");
       }
 
+      user.IsActive = false;
       user.IsDeleted = true;
       user.DeletedAt = DateTime.Now;
 
