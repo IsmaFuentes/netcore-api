@@ -49,6 +49,7 @@ namespace netcore_api
         options.UseSqlServer(connString, o => o.UseCompatibilityLevel(Data.Context.GetSqlCompatLevel(connString))));
 
       // Repositories
+      builder.Services.AddScoped<Data.Repositories.IUserRepository, Data.Repositories.UserRepository>();
 
       // Services
       builder.Services.AddScoped<IPasswordHasher<Data.Entities.User>, PasswordHasher<Data.Entities.User>>();

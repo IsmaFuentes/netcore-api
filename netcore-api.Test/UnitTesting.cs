@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using netcore_api.Data.Repositories;
 using Moq;
 
 namespace netcore_api.Test
@@ -28,7 +29,7 @@ namespace netcore_api.Test
       var logger = new Mock<ILogger<Services.UserService>>();
       var hasher = new Mock<IPasswordHasher<Data.Entities.User>>();
 
-      var service = new Services.UserService(context, hasher.Object, logger.Object);
+      var service = new Services.UserService(new UserRepository(context), hasher.Object, logger.Object);
 
       var result = await service.GetUserAsync(1);
       Assert.NotNull(result);

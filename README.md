@@ -1,6 +1,7 @@
 ﻿# ASP.NET CORE Web API 
 
 ![.NET](https://img.shields.io/badge/.NET-10-blue)
+
 Modern REST API built with **ASP.NET Core 10**, **Entity Framework Core**, and **JWT authentication**.  
 Designed as a clean and reusable **template** for small/medium projects or for learning modern ASP.NET Core patterns.
 
@@ -56,25 +57,6 @@ Designed as a clean and reusable **template** for small/medium projects or for l
   When running in `Development`, the API:
   - Creates the database automatically  
   - Seeds default users: **Admin**, **Moderator**, **User**
-
-## Project structure
-
-```
-API
-└─── Controllers
-│    └─── Filters
-└─── Exceptions
-└─── Middleware
-└─── Mapping
-└─── Services
-│    └─── Interfaces
-Contracts
-└─── DTO
-|
-Data
-└─── Entities
-│ Context
-```
 
 ## Endpoints
 

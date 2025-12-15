@@ -1,55 +1,41 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using netcore_api.Data.Repositories;
 using netcore_api.Mapping;
 
 namespace netcore_api.Services
 {
   public class UserService : Interfaces.IUserService
   {
-    private readonly Data.Context _context;
+    private readonly IUserRepository _repository;
     private readonly IPasswordHasher<Data.Entities.User> _hasher;
     private readonly ILogger<UserService> _logger;
 
     public UserService(
-      Data.Context context, 
+      IUserRepository userRepository, 
       IPasswordHasher<Data.Entities.User> hasher, 
       ILogger<UserService> logger) 
     {
-      _context = context;
+      _repository = userRepository;
       _hasher = hasher;
       _logger = logger;
     }  
 
-    public async Task<Contracts.DTO.PaginationResultDto> GetUsersAsync(
-      System.Linq.Expressions.Expression<Func<Data.Entities.User, bool>>? expression = null, 
-      int page = 1, 
-      int pageSize = 100)
+    public async Task<Contracts.DTO.PaginationResultDto> GetUsersAsync(int page = 1, int pageSize = 100)
     {
-      var query = _context.Users.AsNoTracking().Where(e => e.IsActive && !e.IsDeleted);
-      int count = await query.Where(e => e.IsActive && !e.IsDeleted).CountAsync();
-
-      if(expression is not null)
-      {
-        query = query.Where(expression);
-      }
-
-      query = query.OrderBy(e => e.Id).Skip((page - 1) * pageSize).Take(pageSize);
-
-      var result = await query
-        .Select(e => e.MapToUserDto())
-        .ToListAsync();
+      var result = await _repository.GetAsync(page, pageSize);
+      int count = await _repository.CountAsync();
 
       return new Contracts.DTO.PaginationResultDto() 
       {
         Page = page,
         Count = count,
-        Results = result
+        Results = result.Select(e => e.MapToUserDto())
       };
     }
 
     public async Task<Contracts.DTO.UserDto?> GetUserAsync(int id)
     {
-      var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
+      var user = await _repository.GetAsync(id); 
 
       if(user is not null)
       {
@@ -63,7 +49,7 @@ namespace netcore_api.Services
 
     public async Task<Contracts.DTO.UserDto> CreateUserAsync(Contracts.DTO.UserRegistrationDto dto)
     {
-      if (await _context.Users.AnyAsync(e => e.UserName == dto.UserName))
+      if (await _repository.ExistsAsync(dto.UserName))
         throw new Exceptions.UserAlreadyExistsException("Username is already in use.");
 
       var user = new Data.Entities.User();
@@ -73,15 +59,14 @@ namespace netcore_api.Services
       user.IsActive = true;
       user.Password = _hasher.HashPassword(user, dto.Password);
 
-      await _context.Users.AddAsync(user);
-      await _context.SaveChangesAsync();
+      await _repository.AddAsync(user);
 
       return user.MapToUserDto();
     }
 
     public async Task<Contracts.DTO.UserDto> UpdateUserAsync(Contracts.DTO.UserDto dto)
     {
-      var user = await _context.Users.FirstOrDefaultAsync(e => e.Id == dto.Id);
+      var user = await _repository.GetAsync(dto.Id);
 
       if (user is null)
       {
@@ -92,14 +77,14 @@ namespace netcore_api.Services
       user.Role = (Data.Entities.UserRole)dto.Role;
       user.IsActive = dto.IsActive;
 
-      await _context.SaveChangesAsync();
+      await _repository.UpdateAsync(user);
 
       return user.MapToUserDto();
     }
 
     public async Task<Contracts.DTO.UserDto> DeleteUserAsync(int id)
     {
-      var user = await _context.Users.FirstOrDefaultAsync(e => e.Id == id);
+      var user = await _repository.GetAsync(id);
 
       if (user is null)
       {
@@ -107,11 +92,7 @@ namespace netcore_api.Services
         throw new Exceptions.NotFoundException("user not found");
       }
 
-      user.IsActive = false;
-      user.IsDeleted = true;
-      user.DeletedAt = DateTime.Now;
-
-      await _context.SaveChangesAsync();
+      await _repository.DeleteAsync(user);
 
       return user.MapToUserDto();
     }
