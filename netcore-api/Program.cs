@@ -53,9 +53,9 @@ namespace netcore_api
 
       // Services
       builder.Services.AddScoped<IPasswordHasher<Data.Entities.User>, PasswordHasher<Data.Entities.User>>();
-      builder.Services.AddScoped<Services.Interfaces.IJwtTokenService, Services.JwtTokenService>();
-      builder.Services.AddScoped<Services.Interfaces.IAuthService, Services.AuthService>();
-      builder.Services.AddScoped<Services.Interfaces.IUserService, Services.UserService>();
+      builder.Services.AddScoped<Services.Jwt.IJwtTokenService, Services.Jwt.JwtTokenService>();
+      builder.Services.AddScoped<Contracts.Services.IAuthService, Services.AuthService>();
+      builder.Services.AddScoped<Contracts.Services.IUserService, Services.UserService>();
 
       // Esquema de autenticación Jwt
       builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

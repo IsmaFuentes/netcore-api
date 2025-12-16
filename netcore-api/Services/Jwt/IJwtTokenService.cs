@@ -1,4 +1,4 @@
-﻿namespace netcore_api.Services.Interfaces
+﻿namespace netcore_api.Services.Jwt
 {
   public interface IJwtTokenService
   {

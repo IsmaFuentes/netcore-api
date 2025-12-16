@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using netcore_api.Data.Repositories;
+using netcore_api.Contracts.Services;
 using netcore_api.Mapping;
 
 namespace netcore_api.Services
 {
-  public class UserService : Interfaces.IUserService
+  public class UserService : IUserService
   {
     private readonly IUserRepository _repository;
     private readonly IPasswordHasher<Data.Entities.User> _hasher;

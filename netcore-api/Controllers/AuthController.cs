@@ -6,9 +6,9 @@ namespace netcore_api.Controllers
   [ApiController, Route("api/[controller]"), Authorize]
   public class AuthController : ControllerBase
   {
-    private readonly Services.Interfaces.IAuthService _authService;
+    private readonly Contracts.Services.IAuthService _authService;
 
-    public AuthController(Services.Interfaces.IAuthService authService)
+    public AuthController(Contracts.Services.IAuthService authService)
     {
       _authService = authService;
     }

@@ -8,6 +8,7 @@ namespace netcore_api.Data.Repositories
     Task<List<User>> GetAsync(int page = 1, int pageSize = 100);
     Task<int> CountAsync();
     Task<User?> GetAsync(int id);
+    Task<User?> GetAsync(string userName);
     Task<bool> ExistsAsync(string userName);
     Task AddAsync(User entity);
     Task UpdateAsync(User entity);
@@ -44,6 +45,11 @@ namespace netcore_api.Data.Repositories
     public virtual async Task<User?> GetAsync(int id)
     {
       return await _context.Users.FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
+    }
+
+    public virtual async Task<User?> GetAsync(string userName)
+    {
+      return await _context.Users.FirstOrDefaultAsync(e => e.UserName == userName && !e.IsDeleted);
     }
 
     public async Task AddAsync(User entity)

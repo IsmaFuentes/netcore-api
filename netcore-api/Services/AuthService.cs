@@ -1,21 +1,24 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using netcore_api.Contracts.Services;
+using netcore_api.Data.Repositories;
+using netcore_api.Services.Jwt;
 
 namespace netcore_api.Services
 {
-  public class AuthService : Interfaces.IAuthService
+  public class AuthService : IAuthService
   {
-    private readonly Data.Context _ctx;
-    private readonly Interfaces.IJwtTokenService _tokenService;
+    private readonly IUserRepository _repository;
+    private readonly IJwtTokenService _tokenService;
     private readonly IPasswordHasher<Data.Entities.User> _hasher;
     private readonly ILogger<AuthService> _logger;
 
     public AuthService(
-      Data.Context context, 
-      Interfaces.IJwtTokenService tokenService,
+      IUserRepository userRepository, 
+      IJwtTokenService tokenService,
       IPasswordHasher<Data.Entities.User> hasher, ILogger<AuthService> logger)
     {
-      _ctx = context;
+      _repository = userRepository;
       _tokenService = tokenService;
       _hasher = hasher;
       _logger = logger;
@@ -23,7 +26,7 @@ namespace netcore_api.Services
 
     public async Task<Contracts.DTO.AuthResponseDto?> Login(Contracts.DTO.AuthRequestDto request)
     {
-      var user = await _ctx.Users.AsNoTracking().FirstOrDefaultAsync(e => e.UserName == request.UserName);
+      var user = await _repository.GetAsync(request.UserName);
 
       if (user is null)
       {
@@ -49,7 +52,7 @@ namespace netcore_api.Services
 
     public async Task<Contracts.DTO.AuthResponseDto> RefreshToken(int userId)
     {
-      var user = await _ctx.Users.AsNoTracking().FirstOrDefaultAsync(e => e.Id == userId);
+      var user = await _repository.GetAsync(userId);
 
       if (user is null)
       {

@@ -1,9 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 
-namespace netcore_api.Services
+namespace netcore_api.Services.Jwt
 {
-  public class JwtTokenService : Interfaces.IJwtTokenService
+  public class JwtTokenService : IJwtTokenService
   {
     private readonly IConfiguration _configuration;
 
@@ -23,11 +22,11 @@ namespace netcore_api.Services
         Audience = _configuration["Jwt:Audience"],
         Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpirationMinutes"])),
         SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
-        Subject = new ClaimsIdentity(
+        Subject = new System.Security.Claims.ClaimsIdentity(
         [
-          new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-          new Claim(ClaimTypes.Name, user.UserName),
-          new Claim(ClaimTypes.Role, user.Role.ToString())
+          new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, user.Id.ToString()),
+          new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, user.UserName),
+          new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, user.Role.ToString())
         ]),
       });
 

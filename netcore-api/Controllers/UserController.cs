@@ -6,8 +6,9 @@ namespace netcore_api.Controllers
   [ApiController, Route("api/[controller]"), Authorize]
   public class UserController : ControllerBase
   {
-    private Services.Interfaces.IUserService _userService;
-    public UserController(Services.Interfaces.IUserService userService) 
+    private readonly Contracts.Services.IUserService _userService;
+
+    public UserController(Contracts.Services.IUserService userService) 
     { 
       _userService = userService;
     }
