@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using netcore_api.Contracts.Services;
 using netcore_api.Data.Repositories;
 using netcore_api.Services.Jwt;
