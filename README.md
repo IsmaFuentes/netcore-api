@@ -2,8 +2,8 @@
 
 ![.NET](https://img.shields.io/badge/.NET-10-blue)
 
-Modern REST API built with **ASP.NET Core 10**, **Entity Framework Core**, and **JWT authentication**.  
-Designed as a clean and reusable **template** for small/medium projects or for learning modern ASP.NET Core patterns.
+RESTful API built with **ASP.NET Core 10**, **Entity Framework Core**, and **JWT authentication**.  
+Designed as a **template** for learning modern ASP.NET Core patterns.
 
 ## Requirements
 
