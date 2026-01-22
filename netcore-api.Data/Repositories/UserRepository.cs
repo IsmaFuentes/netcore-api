@@ -3,18 +3,6 @@ using netcore_api.Data.Entities;
 
 namespace netcore_api.Data.Repositories
 {
-  public interface IUserRepository
-  {
-    Task<List<User>> GetAsync(int page = 1, int pageSize = 100);
-    Task<int> CountAsync();
-    Task<User?> GetAsync(int id);
-    Task<User?> GetAsync(string userName);
-    Task<bool> ExistsAsync(string userName);
-    Task AddAsync(User entity);
-    Task UpdateAsync(User entity);
-    Task DeleteAsync(User entity);
-  }
-
   public class UserRepository : IUserRepository
   {
     private readonly Context _context;
@@ -24,22 +12,29 @@ namespace netcore_api.Data.Repositories
       _context = context;
     }
 
-    public async Task<int> CountAsync()
-    {
-      return await _context.Users.AsNoTracking().Where(e => e.IsActive && !e.IsDeleted).CountAsync();
-    }
-
     public async Task<bool> ExistsAsync(string userName)
     {
       return await _context.Users.AsNoTracking().AnyAsync(e => e.UserName == userName);
     }
 
-    public async Task<List<User>> GetAsync(int page = 1, int pageSize = 100)
+    public async Task<(List<User>, int userCount)> GetAsync(int page = 1, int pageSize = 100)
     {
-      var query = _context.Users.AsNoTracking()
-        .Where(e => e.IsActive && !e.IsDeleted).Skip((page - 1) * pageSize).Take(pageSize);
+      if(pageSize <= 0)
+        throw new ArgumentOutOfRangeException($"PageSize must be >= 1");
 
-      return await query.ToListAsync();
+      if (page <= 0)
+        throw new ArgumentOutOfRangeException($"Page must be >= 1");
+
+      var query = _context.Users.AsNoTracking().Where(e => e.IsActive && !e.IsDeleted);
+
+      int count = await query.CountAsync();
+      var users = await query
+        .OrderBy(user => user.Id)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+
+      return (users, count);
     }
 
     public virtual async Task<User?> GetAsync(int id)

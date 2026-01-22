@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using netcore_api.Data.Repositories;
-using netcore_api.Contracts.Services;
 using netcore_api.Mapping;
 
 namespace netcore_api.Services
@@ -23,14 +22,13 @@ namespace netcore_api.Services
 
     public async Task<Contracts.DTO.PaginationResultDto> GetUsersAsync(int page = 1, int pageSize = 100)
     {
-      var result = await _repository.GetAsync(page, pageSize);
-      int count = await _repository.CountAsync();
+      var (users, count) = await _repository.GetAsync(page, pageSize);
 
       return new Contracts.DTO.PaginationResultDto() 
       {
         Page = page,
         Count = count,
-        Results = result.Select(e => e.MapToUserDto())
+        Results = users.Select(e => e.MapToUserDto())
       };
     }
 
